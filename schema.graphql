@@ -1,3 +1,35 @@
+
+type User @entity {
+  id: Bytes! # user address
+  totalStaked: BigInt! # current total staked amount
+  totalWithdrawn: BigInt!
+  totalRewardsClaimed: BigInt! # lifetime rewards claimed
+  totalEmergencyWithdrawals: BigInt! # lifetime emergency withdrawals
+  stakingCount: BigInt! # number of times staked
+  withdrawalCount: BigInt! # number of times withdrawn
+  firstStakeTimestamp: BigInt! # when user first staked
+  lastActivityTimestamp: BigInt! # last interaction timestamp
+  
+  # Relations to individual transactions
+  stakes: [Staked!]! @derivedFrom(field: "user")
+  withdrawals: [Withdrawn!]! @derivedFrom(field: "user")
+  rewardsClaimed: [RewardsClaimed!]! @derivedFrom(field: "user"  emergencyWithdrawals: [EmergencyWithdrawn!]! @derivedFrom(field: "user")
+}
+
+type ProtocolStats @entity {
+  id: ID! # "protocol-stats" 
+  totalStaked: BigInt!
+  currentRewardRate: BigInt! # current APR
+  totalUsers: BigInt! # number of unique stakers
+  totalTransactions: BigInt!
+  totalVolumeStaked: BigInt! # lifetime volume staked
+  totalVolumeWithdrawn: BigInt! # lifetime volume withdrawn
+  totalRewardsPaid: BigInt!
+  lastUpdatedTimestamp: BigInt!
+  lastUpdatedBlock: BigInt!
+}
+
+
 type EmergencyWithdrawn @entity(immutable: true) {
   id: Bytes!
   user: Bytes! # address
@@ -14,14 +46,6 @@ type OwnershipTransferred @entity(immutable: true) {
   id: Bytes!
   previousOwner: Bytes! # address
   newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Paused @entity(immutable: true) {
-  id: Bytes!
-  account: Bytes! # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -72,39 +96,6 @@ type StakingInitialized @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type StakingPaused @entity(immutable: true) {
-  id: Bytes!
-  timestamp: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type StakingUnpaused @entity(immutable: true) {
-  id: Bytes!
-  timestamp: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type TokenRecovered @entity(immutable: true) {
-  id: Bytes!
-  token: Bytes! # address
-  amount: BigInt! # uint256
-  timestamp: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Unpaused @entity(immutable: true) {
-  id: Bytes!
-  account: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
 
 type Withdrawn @entity(immutable: true) {
   id: Bytes!
